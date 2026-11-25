@@ -1,0 +1,17 @@
+# Practice target for Ansible. Apply: hangar apply --create-only -f <this file>
+apiVersion: compute.hangarlab.cloud/v1alpha1
+kind: VirtualMachine
+metadata:
+  name: ansible-lab
+  project: destrier-5n7qg
+spec:
+  resources:
+    cpu: "4"
+    memory: 8Gi
+  rootDisk:
+    fromImage:
+      image:
+        name: ubuntu-26-04
+      size: 40Gi
+  sshAuthorizedKeys:
+    - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILkiANUe6zKwN8ByE2TjGqiHDdqIRSLwavcmhsO8h1YZ hangar-ansible-lab"

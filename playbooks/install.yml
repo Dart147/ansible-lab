@@ -1,0 +1,67 @@
+---
+- name: Install base software on Hangar VM
+  hosts: hangar_vm
+  become: true  
+  gather_facts: true
+
+  tasks:
+    - name: Verify that the target operating system is Ubuntu
+      ansible.builtin.assert:
+        that:
+          - ansible_facts['distribution'] == "Ubuntu"
+        fail_msg: >-
+          This playbook currently supports Ubuntu only.
+          Detected distribution: {{ ansible_facts['distribution'] }}
+        success_msg: "Ubuntu operating system detected."
+
+    - name: Install base packages
+      ansible.builtin.apt:
+        name:
+          - git
+          - make
+          - ca-certificates
+          - curl
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Install Docker with the docker role
+      ansible.builtin.import_role:
+        name: docker
+
+    - name: Reset the SSH connection after changing group membership
+      ansible.builtin.meta: reset_connection
+
+    - name: Verify Git installation
+      ansible.builtin.command:
+        cmd: git --version
+      register: git_version
+      changed_when: false
+
+    - name: Verify Make installation
+      ansible.builtin.command:
+        cmd: make --version
+      register: make_version
+      changed_when: false
+
+    - name: Verify Docker installation
+      ansible.builtin.command:
+        cmd: docker --version
+      register: docker_version_output
+      changed_when: false
+      become: false
+
+    - name: Verify Docker Compose installation
+      ansible.builtin.command:
+        cmd: docker compose version
+      register: docker_compose_version_output
+      changed_when: false
+      become: false
+
+    - name: Display installed software versions
+      ansible.builtin.debug:
+        msg:
+          - "{{ git_version.stdout }}"
+          - "{{ make_version.stdout_lines[0] }}"
+          - "{{ docker_version_output.stdout }}"
+          - "{{ docker_compose_version_output.stdout }}"

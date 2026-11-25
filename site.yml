@@ -1,0 +1,4 @@
+---
+# Main Playbook
+- name: Install base software and Docker
+  ansible.builtin.import_playbook: playbooks/install.yml

@@ -1,0 +1,19 @@
+---
+- name: Report the state of the hangar VM
+  hosts: hangar_vm
+  gather_facts: true
+
+  tasks:
+    - name: Show the operating system
+      ansible.builtin.debug:
+        msg: "{{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}"
+
+    - name: Read root filesystem usage
+      ansible.builtin.command: df -h /
+      register: root_disk
+      changed_when: false
+      check_mode: false
+
+    - name: Show root filesystem usage
+      ansible.builtin.debug:
+        var: root_disk.stdout_lines

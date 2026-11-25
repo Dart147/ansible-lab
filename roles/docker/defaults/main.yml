@@ -1,0 +1,4 @@
+docker_version: "5:29.7.2-1~ubuntu.26.04~resolute"
+docker_compose_version: "5.5.0-1~ubuntu.26.04~resolute"
+docker_containerd_version: "2.4.2-4~ubuntu.26.04~resolute"
+docker_buildx_version: "0.39.0-1~ubuntu.26.04~resolute"
